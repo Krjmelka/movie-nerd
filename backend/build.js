@@ -4,7 +4,7 @@ const fs = require('fs');
 
 async function build() {
   const entryPoints = fs.readdirSync(path.join(__dirname, 'src/handlers'))
-    .filter(file => file.endsWith('.ts'))
+    .filter(file => file.endsWith('.ts') && file !== 'index.ts')
     .map(file => path.join(__dirname, 'src/handlers', file));
 
   await esbuild.build({

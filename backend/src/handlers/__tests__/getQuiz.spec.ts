@@ -1,5 +1,6 @@
-import { handler } from '../hello';
+import { handler } from '../getQuiz';
 import { Context } from 'aws-lambda';
+import { createFakeContext } from '../../helpers/lambdaWrapper.util'
 
 describe('handler function', () => {
   it('should return a 200 status and the correct body', async () => {
@@ -17,20 +18,7 @@ describe('handler function', () => {
         search: 'example',
       },
     };
-    const context: Context = {
-      awsRequestId: '1234567890',
-      callbackWaitsForEmptyEventLoop: true,
-      functionName: 'myFunction',
-      functionVersion: '1.0',
-      invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:myFunction',
-      memoryLimitInMB: '128',
-      succeed: jest.fn(),
-      fail: jest.fn(),
-      logGroupName: 'loggroup1',
-      logStreamName: 'streamName1',
-      getRemainingTimeInMillis: jest.fn(),
-      done: jest.fn()
-    };
+    const context = createFakeContext()
     const result = await handler(event, context, () => {});
     
     expect(result.statusCode).toBe(200);

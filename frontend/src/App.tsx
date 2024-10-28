@@ -6,6 +6,9 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
+  const API_URL = '__API_URL__'
+  console.log(API_URL)
+
   return (
     <>
       <div>

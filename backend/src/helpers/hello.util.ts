@@ -1,3 +1,3 @@
-export const helperFunction = () => {
-  return "Hello from helper!";
+export const helperFunction = (lambdaName: string) => {
+  return `Hello from ${lambdaName}!`;
 };
