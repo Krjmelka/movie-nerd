@@ -1,6 +1,9 @@
 import express from 'express';
-import { createFakeContext } from './helpers/lambdaWrapper.util';
-import { registeredLambdas } from './handlers'
+import { createFakeContext } from './utils/lambdaWrapper.util';
+import { registeredLambdas } from './handlers';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 3000;
@@ -24,7 +27,7 @@ registeredLambdas.forEach((lambda) => {
 
       try {
         const result = await lambdaHandler(event, context);
-        res.status(200).send(result);
+        res.status(200).send(JSON.parse(result.body));
       } catch (error) {
         res.status(500).send({ error: 'Error invoking Lambda' });
       }
@@ -41,7 +44,7 @@ registeredLambdas.forEach((lambda) => {
 
       try {
         const result = await lambdaHandler(event, context);
-        res.status(200).send(result);
+        res.status(200).send(JSON.parse(result.body));
       } catch (error) {
         res.status(500).send({ error: 'Error invoking Lambda' });
       }
