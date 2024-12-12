@@ -10,6 +10,7 @@ export interface Round {
   imageUrl: string;
   answerId: string;
   variants: QuizVariant[];
+  expiresAt: Date;
 }
 
 export interface Person {
@@ -55,8 +56,6 @@ export interface QuizRoundResult {
   poster: string;
   title: string;
   isCorrect: boolean;
-  currentScore: number;
-  bestScore: number;
 }
 
 export interface UserResult {
