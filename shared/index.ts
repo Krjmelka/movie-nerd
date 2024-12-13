@@ -37,7 +37,7 @@ export interface Movie {
 
 export interface QuizVariant {
   id: string;
-  title: string
+  title: string;
 }
 
 export interface QuizRound {

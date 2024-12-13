@@ -5,7 +5,8 @@ export const createFakeContext = (): Context => {
     callbackWaitsForEmptyEventLoop: false,
     functionName: 'myLambda',
     functionVersion: '$LATEST',
-    invokedFunctionArn: 'arn:aws:lambda:us-west-2:123456789012:function:myLambda',
+    invokedFunctionArn:
+      'arn:aws:lambda:us-west-2:123456789012:function:myLambda',
     memoryLimitInMB: '128',
     awsRequestId: 'fake-aws-request-id',
     logGroupName: '/aws/lambda/myLambda',

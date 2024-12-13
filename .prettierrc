@@ -1,0 +1,17 @@
+{
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": [
+        "*.yml",
+        "*.yaml"
+      ],
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { MongoClient, Db } from "mongodb";
+import { MongoClient, Db } from 'mongodb';
 let cachedDB: Db | null = null;
 
 export const connectToDatabase = async () => {
@@ -7,16 +7,15 @@ export const connectToDatabase = async () => {
   }
 
   const client = await MongoClient.connect(process.env.MONGODB_URI as string);
-  const db = client.db("mn-db");
-  const indexes = await db.collection("rounds").indexes();
+  const db = client.db('mn-db');
+  const indexes = await db.collection('rounds').indexes();
 
-  const indexExists = indexes.some(index => index.name === "expiresAt_1");
+  const indexExists = indexes.some(index => index.name === 'expiresAt_1');
   if (!indexExists) {
-    await db.collection("rounds").createIndex(
-      { expiresAt: 1 },
-      { expireAfterSeconds: 0 }
-    );
-    console.log("TTL index created for expiresAt");
+    await db
+      .collection('rounds')
+      .createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+    console.log('TTL index created for expiresAt');
   }
   cachedDB = db;
   return db;

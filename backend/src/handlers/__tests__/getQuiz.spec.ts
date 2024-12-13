@@ -1,6 +1,6 @@
 import { handler } from '../getQuiz';
 import { Context, APIGatewayProxyEvent } from 'aws-lambda';
-import { createFakeContext } from '../../utils/lambdaWrapper.util'
+import { createFakeContext } from '../../utils/lambdaWrapper.util';
 
 describe('handler function', () => {
   it('should return a 200 status and the correct body', async () => {
@@ -55,7 +55,7 @@ describe('handler function', () => {
       },
     };
     const result = await handler(event);
-    
+
     expect(result.statusCode).toBe(200);
     expect(JSON.parse(result.body).message).toBe('Hello from helper!');
   });

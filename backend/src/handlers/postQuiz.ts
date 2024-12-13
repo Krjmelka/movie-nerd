@@ -1,18 +1,18 @@
-import {APIGatewayProxyHandler} from "aws-lambda";
-import {connectToDatabase} from "../utils/mongoose.util";
+import { APIGatewayProxyHandler } from 'aws-lambda';
+import { connectToDatabase } from '../utils/mongoose.util';
 import {
   Movie,
   QuizRoundAnswer,
   Round,
   QuizRoundResult,
-} from "@movie-nerd/shared";
-import {ObjectId} from "mongodb";
+} from '@movie-nerd/shared';
+import { ObjectId } from 'mongodb';
 
-export const handler: APIGatewayProxyHandler = async (event) => {
+export const handler: APIGatewayProxyHandler = async event => {
   if (!event.body) {
     return {
       statusCode: 400,
-      body: JSON.stringify({message: "Missed body"}),
+      body: JSON.stringify({ message: 'Missed body' }),
     };
   }
   try {
@@ -20,22 +20,22 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const roundObjectId = new ObjectId(requestBody.roundId);
     const db = await connectToDatabase();
     const round = await db
-      .collection("rounds")
-      .findOne<Round>({_id: roundObjectId});
+      .collection('rounds')
+      .findOne<Round>({ _id: roundObjectId });
     if (!round) {
       return {
         statusCode: 400,
-        body: JSON.stringify({message: "no such round"}),
+        body: JSON.stringify({ message: 'no such round' }),
       };
     }
     const movieObjectId = new ObjectId(round.answerId);
     const correctMovie = await db
-      .collection("movies")
-      .findOne<Movie>({_id: movieObjectId});
+      .collection('movies')
+      .findOne<Movie>({ _id: movieObjectId });
     if (!correctMovie) {
       return {
         statusCode: 500,
-        body: JSON.stringify({message: "Missed movie"}),
+        body: JSON.stringify({ message: 'Missed movie' }),
       };
     }
     const quizResult: QuizRoundResult = {

@@ -6,17 +6,19 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda';
 
-dotenv.config({path: path.resolve(__dirname, '../../.env')});
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
-registeredLambdas.forEach((lambda) => {
+registeredLambdas.forEach(lambda => {
   const { moduleName, moduleFunction, apiPath, method } = lambda;
-  const lambdaHandler = require(`./handlers/${moduleName}`)[moduleFunction] as APIGatewayProxyHandler
+  const lambdaHandler = require(`./handlers/${moduleName}`)[
+    moduleFunction
+  ] as APIGatewayProxyHandler;
 
   const context = createFakeContext();
 
@@ -31,8 +33,8 @@ registeredLambdas.forEach((lambda) => {
 
       try {
         const result = await lambdaHandler(event, context, () => {});
-        if(result) {
-          res.status(result.statusCode).send(JSON.parse(result.body))
+        if (result) {
+          res.status(result.statusCode).send(JSON.parse(result.body));
         }
       } catch (error) {
         res.status(500).send({ error: 'Error invoking Lambda' });
@@ -50,16 +52,15 @@ registeredLambdas.forEach((lambda) => {
 
       try {
         const result = await lambdaHandler(event, context, () => {});
-        if(result) {
-          res.status(result.statusCode).send(JSON.parse(result.body))
+        if (result) {
+          res.status(result.statusCode).send(JSON.parse(result.body));
         }
       } catch (error) {
         res.status(500).send({ error: 'Error invoking Lambda' });
       }
     });
   }
-
-})
+});
 
 app.listen(port, () => {
   console.log(`Local Lambda server is running on http://localhost:${port}`);
