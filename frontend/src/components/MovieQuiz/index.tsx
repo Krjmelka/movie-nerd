@@ -17,12 +17,12 @@ export const MovieQuiz = ({ quizData }: MovieQuizProps) => {
   const { sendResultData, isLoading, resultData } = useQuizResult();
 
   useEffect(() => {
-    timerRef.current = setTimeout(() => {
+    timerRef.current = window.setTimeout(() => {
       sendResultData({ roundId: quizData.roundId });
     }, ROUND_TIME * 1000);
     return () => {
       if (timerRef.current) {
-        clearTimeout(timerRef.current);
+        window.clearTimeout(timerRef.current);
         timerRef.current = null;
       }
     };

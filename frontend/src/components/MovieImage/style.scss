@@ -51,17 +51,14 @@ $movie-image-border: calc(var(--border-size) * 2);
     border-radius: var(--border-radius);
   }
 }
-// .frame:hover::before {
-//   animation-play-state: paused;
-// }
 
 @keyframes countdown {
   from {
-    --angle: 0deg; /* Начало градиента */
+    --angle: 0deg;
     --hue: 120;
   }
   to {
-    --angle: 360deg; /* Полное заполнение */
+    --angle: 360deg;
     --hue: 0;
   }
 }

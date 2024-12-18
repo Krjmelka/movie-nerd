@@ -1,0 +1,111 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "pnpm"
+          cache-dependency-path: ./pnpm-lock.yaml
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Application
+        run: pnpm run frontend:build
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./frontend/dist
+
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifacts
+          path: ./frontend/dist
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "pnpm"
+          cache-dependency-path: ./pnpm-lock.yaml
+
+      - name: Install Dependencies
+        run: cd cdk-stack && pnpm install
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::448049825927:role/ci-cd-repo
+          aws-region: eu-north-1
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Deploy with CDK
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: cd cdk-stack && cdk deploy --all --require-approval never
+
+  destroy:
+    name: Destroy AWS Stack
+    runs-on: ubuntu-latest
+    needs: []
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::448049825927:role/ci-cd-repo
+          aws-region: eu-north-1
+
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
+
+      - name: Destroy with CDK
+        run: cd cdk-stack && cdk destroy --all --force
