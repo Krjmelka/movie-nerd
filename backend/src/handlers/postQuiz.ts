@@ -28,6 +28,7 @@ export const handler: APIGatewayProxyHandler = async event => {
         body: JSON.stringify({ message: 'no such round' }),
       };
     }
+    await db.collection('rounds').deleteOne({ _id: roundObjectId });
     const movieObjectId = new ObjectId(round.answerId);
     const correctMovie = await db
       .collection('movies')
@@ -43,8 +44,8 @@ export const handler: APIGatewayProxyHandler = async event => {
       poster: correctMovie.poster_path,
       title: correctMovie.title,
       roundId: requestBody.roundId,
+      imdbUrl: `https://www.imdb.com/title/${correctMovie.imdb_id}`,
     };
-    console.log(quizResult);
     return {
       statusCode: 200,
       body: JSON.stringify(quizResult),

@@ -1,0 +1,67 @@
+$movie-image-border: calc(var(--border-size) * 2);
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --hue {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 780 / 438;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--border-radius);
+    background: conic-gradient(
+      hsl(var(--hue, 0), 90%, 40%) var(--angle),
+      transparent 0deg
+    );
+    animation: countdown var(--round-time) linear forwards;
+    z-index: 0;
+    overflow: hidden;
+  }
+  &.animation-paused::before {
+    animation-play-state: paused;
+  }
+
+  img {
+    display: block;
+    position: absolute;
+    top: $movie-image-border;
+    left: $movie-image-border;
+    width: calc(100% - $movie-image-border * 2);
+    height: calc(100% - $movie-image-border * 2);
+    object-fit: cover;
+    z-index: 1;
+    border-radius: var(--border-radius);
+  }
+}
+// .frame:hover::before {
+//   animation-play-state: paused;
+// }
+
+@keyframes countdown {
+  from {
+    --angle: 0deg; /* Начало градиента */
+    --hue: 120;
+  }
+  to {
+    --angle: 360deg; /* Полное заполнение */
+    --hue: 0;
+  }
+}

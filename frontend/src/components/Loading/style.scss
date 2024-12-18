@@ -1,0 +1,13 @@
+.loading-icon {
+  width: 10rem;
+  animation: rotating 1.5s linear infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

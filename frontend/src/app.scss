@@ -1,8 +1,7 @@
 .container {
-  max-width: 800px;
+  max-width: 60rem;
   width: 100%;
-}
-
-div {
-  background-color: rgba(70, 9, 54, 0.794);
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
 }

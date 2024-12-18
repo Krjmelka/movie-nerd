@@ -48,7 +48,7 @@ export interface QuizRound {
 
 export interface QuizRoundAnswer {
   roundId: string;
-  variantId: string;
+  variantId?: string;
 }
 
 export interface QuizRoundResult {
@@ -56,6 +56,7 @@ export interface QuizRoundResult {
   poster: string;
   title: string;
   isCorrect: boolean;
+  imdbUrl: string;
 }
 
 export interface UserResult {

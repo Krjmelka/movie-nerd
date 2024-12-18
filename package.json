@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend": "pnpm --filter backend run start:local",
+    "frontend": "pnpm --filter frontend run dev",
     "format": "prettier --write '**/*.{ts,tsx,js,jsx,json,css,scss,md}'",
     "format:check": "prettier --check '**/*.{ts,tsx,js,jsx,json,css,scss,md}'"
   },
