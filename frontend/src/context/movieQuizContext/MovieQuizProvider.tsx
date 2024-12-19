@@ -1,14 +1,8 @@
 import { QuizRound } from '@movie-nerd/shared';
 import axios from 'axios';
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { createContext, FC, ReactNode, useCallback, useState } from 'react';
 import { IMAGE_URL_PATH, MOVIE_FRAGMENT_IMAGE_SIZE } from '../../constants';
+import { useTranslation } from 'react-i18next';
 
 // const fetchFakeData = () =>
 //   new Promise<QuizRound>(res => {
@@ -53,6 +47,16 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
 }) => {
   const [quizData, setQuizData] = useState<QuizRound | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<unknown | undefined>();
+  const { i18n } = useTranslation();
+
+  if (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Something went wrong!');
+    }
+  }
 
   const fetchQuizData = useCallback(async () => {
     setIsLoading(true);
@@ -65,7 +69,7 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
       //   setIsLoading(false);
       // };
       const { data } = await axios.get<QuizRound>(
-        `${import.meta.env.VITE_API_URL}/quiz`
+        `${import.meta.env.VITE_API_URL}/quiz?lang=${i18n.language}`
       );
       const img = new Image();
       img.src = `${IMAGE_URL_PATH}${MOVIE_FRAGMENT_IMAGE_SIZE.w780}${data.imageUrl}`;
@@ -74,9 +78,9 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
         setIsLoading(false);
       };
     } catch (err) {
-      console.error(err);
+      setError(err);
     }
-  }, []);
+  }, [i18n.language]);
 
   return (
     <MovieQuizContext.Provider value={{ quizData, isLoading, fetchQuizData }}>
@@ -85,10 +89,4 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useMovieQuiz = () => {
-  const context = useContext(MovieQuizContext);
-  if (context === undefined) {
-    throw new Error('useMovie must be used within a MovieProvider');
-  }
-  return context;
-};
+export default MovieQuizContext;

@@ -43,16 +43,16 @@ export const IMDBLogo = ({ className, ...rest }: IMDBLogoProps) => {
               xlinkHref="#d1pwhf9wy2"
               opacity="1"
               fill="#f6c700"
-              fill-opacity="1"
+              fillOpacity="1"
             ></use>
             <g>
               <use
                 xlinkHref="#d1pwhf9wy2"
                 opacity="1"
-                fill-opacity="0"
+                fillOpacity="0"
                 stroke="#000000"
-                stroke-width="1"
-                stroke-opacity="0"
+                strokeWidth="1"
+                strokeOpacity="0"
               ></use>
             </g>
           </g>
@@ -61,16 +61,16 @@ export const IMDBLogo = ({ className, ...rest }: IMDBLogoProps) => {
               xlinkHref="#g5jjnq26yS"
               opacity="1"
               fill="#000000"
-              fill-opacity="1"
+              fillOpacity="1"
             ></use>
             <g>
               <use
                 xlinkHref="#g5jjnq26yS"
                 opacity="1"
-                fill-opacity="0"
+                fillOpacity="0"
                 stroke="#000000"
-                stroke-width="1"
-                stroke-opacity="0"
+                strokeWidth="1"
+                strokeOpacity="0"
               ></use>
             </g>
           </g>
@@ -79,16 +79,16 @@ export const IMDBLogo = ({ className, ...rest }: IMDBLogoProps) => {
               xlinkHref="#i3Prh1JpXt"
               opacity="1"
               fill="#000000"
-              fill-opacity="1"
+              fillOpacity="1"
             ></use>
             <g>
               <use
                 xlinkHref="#i3Prh1JpXt"
                 opacity="1"
-                fill-opacity="0"
+                fillOpacity="0"
                 stroke="#000000"
-                stroke-width="1"
-                stroke-opacity="0"
+                strokeWidth="1"
+                strokeOpacity="0"
               ></use>
             </g>
           </g>
@@ -97,16 +97,16 @@ export const IMDBLogo = ({ className, ...rest }: IMDBLogoProps) => {
               xlinkHref="#a4ov9rRGQm"
               opacity="1"
               fill="#000000"
-              fill-opacity="1"
+              fillOpacity="1"
             ></use>
             <g>
               <use
                 xlinkHref="#a4ov9rRGQm"
                 opacity="1"
-                fill-opacity="0"
+                fillOpacity="0"
                 stroke="#000000"
-                stroke-width="1"
-                stroke-opacity="0"
+                strokeWidth="1"
+                strokeOpacity="0"
               ></use>
             </g>
           </g>
@@ -115,16 +115,16 @@ export const IMDBLogo = ({ className, ...rest }: IMDBLogoProps) => {
               xlinkHref="#fk968BpsX"
               opacity="1"
               fill="#000000"
-              fill-opacity="1"
+              fillOpacity="1"
             ></use>
             <g>
               <use
                 xlinkHref="#fk968BpsX"
                 opacity="1"
-                fill-opacity="0"
+                fillOpacity="0"
                 stroke="#000000"
-                stroke-width="1"
-                stroke-opacity="0"
+                strokeWidth="1"
+                strokeOpacity="0"
               ></use>
             </g>
           </g>

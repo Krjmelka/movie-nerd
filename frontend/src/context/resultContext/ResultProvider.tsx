@@ -1,13 +1,7 @@
-import { QuizRoundResult, QuizRoundAnswer } from '@movie-nerd/shared';
+import { createContext, FC, ReactNode, useCallback, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import { useTranslation } from 'react-i18next';
+import { QuizRoundResult, QuizRoundAnswer } from '@movie-nerd/shared';
 import { IMAGE_URL_PATH, MOVIE_POSTER_IMAGE_SIZE } from '../../constants';
 
 // const fetchFakeData = (id: string | undefined) =>
@@ -35,6 +29,16 @@ const ResultContext = createContext<ResultContextType | undefined>(undefined);
 export const ResultProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [resultData, setResultData] = useState<QuizRoundResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<unknown | undefined>();
+  const { i18n } = useTranslation();
+
+  if (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Something went wrong!');
+    }
+  }
 
   const sendResultData = useCallback(
     async ({ roundId, variantId }: QuizRoundAnswer) => {
@@ -44,7 +48,7 @@ export const ResultProvider: FC<{ children: ReactNode }> = ({ children }) => {
           QuizRoundResult,
           AxiosResponse<QuizRoundResult>,
           QuizRoundAnswer
-        >(`${import.meta.env.VITE_API_URL}/quiz`, {
+        >(`${import.meta.env.VITE_API_URL}/quiz?lang=${i18n.language}`, {
           roundId,
           variantId,
         });
@@ -63,10 +67,10 @@ export const ResultProvider: FC<{ children: ReactNode }> = ({ children }) => {
         //   setIsLoading(false);
         // };
       } catch (err) {
-        console.error(err);
+        setError(err);
       }
     },
-    []
+    [i18n.language]
   );
 
   const resetResultData = useCallback(() => {
@@ -83,10 +87,4 @@ export const ResultProvider: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-export const useQuizResult = () => {
-  const context = useContext(ResultContext);
-  if (context === undefined) {
-    throw new Error('useQuizResult must be used within a MovieProvider');
-  }
-  return context;
-};
+export default ResultContext;

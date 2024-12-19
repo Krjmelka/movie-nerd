@@ -4,7 +4,7 @@ import { QuizRound } from '@movie-nerd/shared';
 import { MovieImage } from '../MovieImage';
 import { Button } from '../Button';
 import './style.scss';
-import { useQuizResult } from '../../context/resultContext';
+import { useQuizResult } from '../../context/resultContext/useQuizResult';
 import { ROUND_TIME } from '../../constants';
 
 type MovieQuizProps = {
