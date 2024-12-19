@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import { Button } from '../Button';
 import './style.scss';
@@ -11,6 +12,7 @@ type QuizResultProps = {
 };
 
 export const QuizResult = ({ onSubmit, resultData }: QuizResultProps) => {
+  const { t } = useTranslation();
   const {
     isCorrect,
     poster: posterUrl,
@@ -25,7 +27,7 @@ export const QuizResult = ({ onSubmit, resultData }: QuizResultProps) => {
             success: isCorrect,
           })}
         >
-          {isCorrect ? 'You were correct!' : 'You were wrong!'}
+          {t(isCorrect ? 'You were correct!' : 'You were wrong!')}
         </div>
         <a href={imdbUrl} target="_blank" className="imdb-link">
           <img
@@ -35,7 +37,7 @@ export const QuizResult = ({ onSubmit, resultData }: QuizResultProps) => {
           <IMDBLogo className="logo" />
         </a>
         <div className="quiz-result__movie-title">{movieTitle}</div>
-        <Button text="Next" onClick={() => onSubmit()} />
+        <Button text={t('Next')} onClick={() => onSubmit()} />
       </div>
     </div>,
     document.getElementById('root') as HTMLElement

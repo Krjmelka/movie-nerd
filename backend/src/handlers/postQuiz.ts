@@ -1,14 +1,15 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { connectToDatabase } from '../utils/mongoose.util';
+import { ObjectId } from 'mongodb';
 import {
-  Movie,
   QuizRoundAnswer,
   Round,
   QuizRoundResult,
+  MovieResultAggregated,
 } from '@movie-nerd/shared';
-import { ObjectId } from 'mongodb';
+import { connectToDatabase } from '../utils/mongoose.util';
 
 export const handler: APIGatewayProxyHandler = async event => {
+  const locale = event.queryStringParameters?.['lang'] ?? 'en';
   if (!event.body) {
     return {
       statusCode: 400,
@@ -30,10 +31,45 @@ export const handler: APIGatewayProxyHandler = async event => {
     }
     await db.collection('rounds').deleteOne({ _id: roundObjectId });
     const movieObjectId = new ObjectId(round.answerId);
-    const correctMovie = await db
+    const [movieResult] = await db
       .collection('movies')
-      .findOne<Movie>({ _id: movieObjectId });
-    if (!correctMovie) {
+      .aggregate<MovieResultAggregated>([
+        { $match: { _id: movieObjectId } },
+        {
+          $addFields: {
+            translation: {
+              $arrayElemAt: [
+                {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: '$translations',
+                        as: 'translation',
+                        cond: {
+                          $eq: ['$$translation.locale', locale.toUpperCase()],
+                        },
+                      },
+                    },
+                    as: 'translation',
+                    in: { title: '$$translation.title' },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            poster_path: 1,
+            translation: 1,
+            imdb_id: 1,
+          },
+        },
+      ])
+      .toArray();
+    if (!movieResult) {
       return {
         statusCode: 500,
         body: JSON.stringify({ message: 'Missed movie' }),
@@ -41,10 +77,10 @@ export const handler: APIGatewayProxyHandler = async event => {
     }
     const quizResult: QuizRoundResult = {
       isCorrect: round.answerId === requestBody.variantId,
-      poster: correctMovie.poster_path,
-      title: correctMovie.title,
+      poster: movieResult.poster_path,
+      title: movieResult.translation?.title ?? movieResult.title,
       roundId: requestBody.roundId,
-      imdbUrl: `https://www.imdb.com/title/${correctMovie.imdb_id}`,
+      imdbUrl: `https://www.imdb.com/title/${movieResult.imdb_id}`,
     };
     return {
       statusCode: 200,

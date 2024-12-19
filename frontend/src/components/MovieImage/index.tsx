@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import './style.scss';
-import { useQuizResult } from '../../context/resultContext';
+import { useQuizResult } from '../../context/resultContext/useQuizResult';
 import {
   ROUND_TIME,
   MOVIE_FRAGMENT_IMAGE_SIZE,

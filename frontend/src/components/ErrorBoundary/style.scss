@@ -1,0 +1,24 @@
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 60rem;
+  width: 100%;
+  margin: 1rem;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  span {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-shadow: 0 0 5px #000;
+    -moz-text-shadow: 0 0 5px #000;
+    -webkit-text-shadow: 0 0 5px #000;
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+  }
+}

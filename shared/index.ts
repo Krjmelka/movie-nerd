@@ -35,6 +35,17 @@ export interface Movie {
   translations: Translation[];
 }
 
+export type MovieAggregated = Pick<Movie, 'title' | 'images'> & {
+  translation: Pick<Translation, 'title'> | null;
+};
+
+export type MovieResultAggregated = Pick<
+  Movie,
+  'title' | 'poster_path' | 'imdb_id'
+> & {
+  translation: Pick<Translation, 'title'> | null;
+};
+
 export interface QuizVariant {
   id: string;
   title: string;
