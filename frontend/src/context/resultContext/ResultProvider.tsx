@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { QuizRoundResult, QuizRoundAnswer } from '@movie-nerd/shared';
 import { IMAGE_URL_PATH, MOVIE_POSTER_IMAGE_SIZE } from '../../constants';
+import { loadImage } from '../../utils/loadImage';
 
 // const fetchFakeData = (id: string | undefined) =>
 //   new Promise<QuizRoundResult>(res => {
@@ -52,12 +53,11 @@ export const ResultProvider: FC<{ children: ReactNode }> = ({ children }) => {
           roundId,
           variantId,
         });
-        const img = new Image();
-        img.src = `${IMAGE_URL_PATH}${MOVIE_POSTER_IMAGE_SIZE.w500}${data.poster}`;
-        img.onload = () => {
-          setResultData(data);
-          setIsLoading(false);
-        };
+        await loadImage(
+          `${IMAGE_URL_PATH}${MOVIE_POSTER_IMAGE_SIZE.w500}${data.poster}`
+        );
+        setResultData(data);
+        setIsLoading(false);
 
         // const response = await fetchFakeData(variantId);
         // const img = new Image();

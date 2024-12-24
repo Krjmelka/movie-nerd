@@ -83,13 +83,15 @@ export class MovieNerdStack extends cdk.Stack {
         }
       );
 
-      httpApi.addRoutes({
-        path: registeredLambda.apiPath,
-        methods: [registeredLambda.method as HttpMethod],
-        integration: new HttpLambdaIntegration(
-          `LambdaIntegration-${registeredLambda.moduleName}`,
-          lambdaFunction
-        ),
+      registeredLambda.apiPaths.forEach(path => {
+        httpApi.addRoutes({
+          path: path,
+          methods: [registeredLambda.method as HttpMethod],
+          integration: new HttpLambdaIntegration(
+            `LambdaIntegration-${registeredLambda.moduleName}`,
+            lambdaFunction
+          ),
+        });
       });
     });
 

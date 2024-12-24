@@ -1,0 +1,51 @@
+$movie-image-border: calc(var(--border-size) * 2);
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --hue {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--border-radius);
+    background: conic-gradient(
+      hsl(var(--hue, 0), 90%, 40%) var(--angle),
+      transparent 0deg
+    );
+    animation: countdown var(--round-time) linear forwards;
+    z-index: 0;
+    overflow: hidden;
+  }
+  &.animation-paused::before {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes countdown {
+  from {
+    --angle: 0deg;
+    --hue: 120;
+  }
+  to {
+    --angle: 360deg;
+    --hue: 0;
+  }
+}

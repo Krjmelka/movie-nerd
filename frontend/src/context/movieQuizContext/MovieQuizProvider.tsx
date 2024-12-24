@@ -1,8 +1,22 @@
-import { QuizRound } from '@movie-nerd/shared';
+import { QuizActorsRound, QuizRound } from '@movie-nerd/shared';
 import axios from 'axios';
-import { createContext, FC, ReactNode, useCallback, useState } from 'react';
-import { IMAGE_URL_PATH, MOVIE_FRAGMENT_IMAGE_SIZE } from '../../constants';
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  IMAGE_URL_PATH,
+  MOVIE_FRAGMENT_IMAGE_SIZE,
+  MOVIE_POSTER_IMAGE_SIZE,
+} from '../../constants';
+import { GameModeMap, QuizData } from '../../types';
 import { useTranslation } from 'react-i18next';
+import { useGameMode } from '../gameModeContext/useGameMode';
+import { loadImage } from '../../utils/loadImage';
 
 // const fetchFakeData = () =>
 //   new Promise<QuizRound>(res => {
@@ -34,7 +48,7 @@ import { useTranslation } from 'react-i18next';
 
 type MovieQuizContextType = {
   isLoading: boolean;
-  quizData: QuizRound | null;
+  quizData: QuizData | null;
   fetchQuizData: () => void;
 };
 
@@ -45,9 +59,10 @@ const MovieQuizContext = createContext<MovieQuizContextType | undefined>(
 export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [quizData, setQuizData] = useState<QuizRound | null>(null);
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<unknown | undefined>();
+  const { gameMode } = useGameMode();
   const { i18n } = useTranslation();
 
   if (error) {
@@ -68,19 +83,51 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
       //   setQuizData(response);
       //   setIsLoading(false);
       // };
-      const { data } = await axios.get<QuizRound>(
-        `${import.meta.env.VITE_API_URL}/quiz?lang=${i18n.language}`
-      );
-      const img = new Image();
-      img.src = `${IMAGE_URL_PATH}${MOVIE_FRAGMENT_IMAGE_SIZE.w780}${data.imageUrl}`;
-      img.onload = () => {
-        setQuizData(data);
-        setIsLoading(false);
-      };
+      switch (gameMode) {
+        case GameModeMap.ACTORS: {
+          const { data } = await axios.get<QuizActorsRound>(
+            `${import.meta.env.VITE_API_URL}/actors-quiz?lang=${i18n.language}`
+          );
+          const imagesLoadPromises: Promise<unknown>[] = [];
+
+          data.actors.forEach(actor => {
+            imagesLoadPromises.push(
+              loadImage(
+                `${IMAGE_URL_PATH}${MOVIE_POSTER_IMAGE_SIZE.w185}${actor.profile_path}`
+              )
+            );
+          });
+          await Promise.all(imagesLoadPromises);
+          setQuizData(data);
+          setIsLoading(false);
+          break;
+        }
+        case GameModeMap.MOVIE: {
+          const { data } = await axios.get<QuizRound>(
+            `${import.meta.env.VITE_API_URL}/quiz?lang=${i18n.language}`
+          );
+
+          await loadImage(
+            `${IMAGE_URL_PATH}${MOVIE_FRAGMENT_IMAGE_SIZE.w780}${data.imageUrl}`
+          );
+          setQuizData(data);
+          setIsLoading(false);
+          break;
+        }
+        default: {
+          throw new Error('missed game mode');
+        }
+      }
     } catch (err) {
       setError(err);
     }
-  }, [i18n.language]);
+  }, [i18n.language, gameMode]);
+
+  useEffect(() => {
+    if (gameMode) {
+      fetchQuizData();
+    }
+  }, [gameMode, fetchQuizData]);
 
   return (
     <MovieQuizContext.Provider value={{ quizData, isLoading, fetchQuizData }}>

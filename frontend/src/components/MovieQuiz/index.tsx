@@ -1,17 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import cn from 'classnames';
-import { QuizRound } from '@movie-nerd/shared';
 import { MovieImage } from '../MovieImage';
 import { Button } from '../Button';
-import './style.scss';
 import { useQuizResult } from '../../context/resultContext/useQuizResult';
-import { ROUND_TIME } from '../../constants';
+import { GameMode, QuizData } from '../../types';
+import { ROUND_TIME_MAP } from '../../constants';
+import './style.scss';
 
 type MovieQuizProps = {
-  quizData: QuizRound;
+  quizData: QuizData;
+  gameMode: GameMode;
 };
 
-export const MovieQuiz = ({ quizData }: MovieQuizProps) => {
+export const MovieQuiz = ({ quizData, gameMode }: MovieQuizProps) => {
   const [activeButton, setActiveButton] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
   const { sendResultData, isLoading, resultData } = useQuizResult();
@@ -19,14 +20,14 @@ export const MovieQuiz = ({ quizData }: MovieQuizProps) => {
   useEffect(() => {
     timerRef.current = window.setTimeout(() => {
       sendResultData({ roundId: quizData.roundId });
-    }, ROUND_TIME * 1000);
+    }, ROUND_TIME_MAP[gameMode] * 1000);
     return () => {
       if (timerRef.current) {
         window.clearTimeout(timerRef.current);
         timerRef.current = null;
       }
     };
-  }, [quizData, sendResultData]);
+  }, [quizData, sendResultData, gameMode]);
 
   return (
     <div
@@ -34,7 +35,7 @@ export const MovieQuiz = ({ quizData }: MovieQuizProps) => {
         loading: isLoading,
       })}
     >
-      <MovieImage imageUrl={quizData.imageUrl} />
+      <MovieImage mode={gameMode} quizData={quizData} />
       {quizData.variants.map(variant => (
         <Button
           key={variant.id}
