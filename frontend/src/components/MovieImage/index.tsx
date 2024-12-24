@@ -17,7 +17,7 @@ type MovieImageProps = {
   quizData: QuizData;
 };
 
-const isMovieQuizData = (data: QuizData, mode: GameMode): data is QuizRound =>
+const isMovieQuizData = (_data: QuizData, mode: GameMode): _data is QuizRound =>
   mode === GameModeMap.MOVIE;
 
 export const MovieImage = ({ mode, quizData }: MovieImageProps) => {
