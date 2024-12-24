@@ -1,4 +1,4 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { ObjectId } from 'mongodb';
 import {
   QuizRoundAnswer,
@@ -8,7 +8,7 @@ import {
 } from '@movie-nerd/shared';
 import { connectToDatabase } from '../utils/mongoose.util';
 
-export const handler: APIGatewayProxyHandler = async event => {
+export const handler: APIGatewayProxyHandlerV2 = async event => {
   const locale = event.queryStringParameters?.['lang'] ?? 'en';
   if (!event.body) {
     return {

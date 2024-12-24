@@ -1,4 +1,4 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 import { WithId } from 'mongodb';
 import {
   ActorAggregated,
@@ -9,7 +9,7 @@ import {
 import { connectToDatabase } from '../utils/mongoose.util';
 import { createRoundData } from '../utils/createRoundData.util';
 
-export const handler: APIGatewayProxyHandler = async event => {
+export const handler: APIGatewayProxyHandlerV2 = async event => {
   const locale = event.queryStringParameters?.['lang'] ?? 'us';
   try {
     const db = await connectToDatabase();
@@ -97,8 +97,7 @@ export const handler: APIGatewayProxyHandler = async event => {
 
     const roundData = createRoundData(movies);
     const result = await db.collection('rounds').insertOne(roundData);
-    const apiPath = event.path;
-
+    const apiPath = event.rawPath;
     switch (apiPath) {
       case '/actors-quiz':
         const actorsRoundResponse: QuizActorsRound = {
