@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 registeredLambdas.forEach(lambda => {
-  const { moduleName, moduleFunction, apiPath, method } = lambda;
+  const { moduleName, moduleFunction, apiPaths, method } = lambda;
   const lambdaHandler = require(`./handlers/${moduleName}`)[
     moduleFunction
   ] as APIGatewayProxyHandler;
@@ -23,41 +23,45 @@ registeredLambdas.forEach(lambda => {
   const context = createFakeContext();
 
   if (method === 'GET') {
-    app.get(apiPath, async (req, res) => {
-      const event = {
-        httpMethod: 'GET',
-        path: req.path,
-        headers: req.headers,
-        queryStringParameters: req.query,
-      } as APIGatewayProxyEvent;
+    apiPaths.forEach(path => {
+      app.get(path, async (req, res) => {
+        const event = {
+          httpMethod: 'GET',
+          path: req.path,
+          headers: req.headers,
+          queryStringParameters: req.query,
+        } as APIGatewayProxyEvent;
 
-      try {
-        const result = await lambdaHandler(event, context, () => {});
-        if (result) {
-          res.status(result.statusCode).send(JSON.parse(result.body));
+        try {
+          const result = await lambdaHandler(event, context, () => {});
+          if (result) {
+            res.status(result.statusCode).send(JSON.parse(result.body));
+          }
+        } catch (error) {
+          res.status(500).send({ error: 'Error invoking Lambda' });
         }
-      } catch (error) {
-        res.status(500).send({ error: 'Error invoking Lambda' });
-      }
+      });
     });
   } else if (method === 'POST') {
-    app.post(apiPath, async (req, res) => {
-      const event = {
-        httpMethod: 'POST',
-        path: req.path,
-        headers: req.headers,
-        body: JSON.stringify(req.body),
-        queryStringParameters: req.query,
-      } as APIGatewayProxyEvent;
+    apiPaths.forEach(path => {
+      app.post(path, async (req, res) => {
+        const event = {
+          httpMethod: 'POST',
+          path: req.path,
+          headers: req.headers,
+          body: JSON.stringify(req.body),
+          queryStringParameters: req.query,
+        } as APIGatewayProxyEvent;
 
-      try {
-        const result = await lambdaHandler(event, context, () => {});
-        if (result) {
-          res.status(result.statusCode).send(JSON.parse(result.body));
+        try {
+          const result = await lambdaHandler(event, context, () => {});
+          if (result) {
+            res.status(result.statusCode).send(JSON.parse(result.body));
+          }
+        } catch (error) {
+          res.status(500).send({ error: 'Error invoking Lambda' });
         }
-      } catch (error) {
-        res.status(500).send({ error: 'Error invoking Lambda' });
-      }
+      });
     });
   }
 });

@@ -11,6 +11,8 @@ export interface Round {
   answerId: string;
   variants: QuizVariant[];
   expiresAt: Date;
+  actors: Actor[];
+  description: string;
 }
 
 export interface Person {
@@ -35,9 +37,14 @@ export interface Movie {
   translations: Translation[];
 }
 
-export type MovieAggregated = Pick<Movie, 'title' | 'images'> & {
-  translation: Pick<Translation, 'title'> | null;
+export type MovieAggregated<Actor> = Pick<Movie, 'title' | 'images'> & {
+  translation: Pick<Translation, 'title' | 'description'>;
+  actors: Actor[];
 };
+
+export type ActorAggregated = Pick<Person, 'profile_path' | 'name'>;
+
+export type Actor = ActorAggregated & { id: string };
 
 export type MovieResultAggregated = Pick<
   Movie,
@@ -54,6 +61,11 @@ export interface QuizVariant {
 export interface QuizRound {
   roundId: string;
   imageUrl: string;
+  variants: QuizVariant[];
+}
+export interface QuizActorsRound {
+  roundId: string;
+  actors: Actor[];
   variants: QuizVariant[];
 }
 

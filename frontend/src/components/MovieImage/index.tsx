@@ -1,48 +1,59 @@
-import cn from 'classnames';
-import './style.scss';
+import { useMemo } from 'react';
+import { QuizRound } from '@movie-nerd/shared';
 import { useQuizResult } from '../../context/resultContext/useQuizResult';
 import {
-  ROUND_TIME,
+  ROUND_TIME_MAP,
   MOVIE_FRAGMENT_IMAGE_SIZE,
   IMAGE_URL_PATH,
+  MOVIE_POSTER_IMAGE_SIZE,
 } from '../../constants';
-import React from 'react';
+import { ProgressContainer } from '../ProgressContainer';
+import { GameMode, GameModeMap, QuizData } from '../../types';
+import { Image as ImageComponent } from '../Image';
+import './style.scss';
 
-type MovieImageProps = JSX.IntrinsicElements['img'] & {
-  imageUrl: string;
+type MovieImageProps = {
+  mode: GameMode;
+  quizData: QuizData;
 };
 
-export const MovieImage = ({
-  imageUrl,
-  className,
-  ...rest
-}: MovieImageProps) => {
+const isMovieQuizData = (data: QuizData, mode: GameMode): data is QuizRound =>
+  mode === GameModeMap.MOVIE;
+
+export const MovieImage = ({ mode, quizData }: MovieImageProps) => {
   const { isLoading, resultData } = useQuizResult();
+
+  const quizImageContent = useMemo(() => {
+    if (isMovieQuizData(quizData, mode)) {
+      return (
+        <ImageComponent
+          src={`${IMAGE_URL_PATH}${MOVIE_FRAGMENT_IMAGE_SIZE.w780}${quizData.imageUrl}`}
+          className="movie-img"
+          alt="movie-image"
+        />
+      );
+    } else {
+      return (
+        <div className="frame-container">
+          {quizData.actors.map(actor => (
+            <ImageComponent
+              key={actor.id}
+              className="actor-img"
+              src={`${IMAGE_URL_PATH}${MOVIE_POSTER_IMAGE_SIZE.w185}${actor.profile_path}`}
+              alt={`actor ${actor.name}`}
+            />
+          ))}
+        </div>
+      );
+    }
+  }, [mode, quizData]);
   return (
-    <div
-      className={cn('frame', {
-        'animation-paused': isLoading || !!resultData,
-      })}
-      style={
-        {
-          '--round-time': `${ROUND_TIME}s`,
-        } as React.CSSProperties
-      }
+    <ProgressContainer
+      mode={mode}
+      timeout={ROUND_TIME_MAP[mode]}
+      isPaused={isLoading || !!resultData}
     >
-      <img
-        onContextMenu={event => {
-          event.preventDefault();
-          return false;
-        }}
-        onDragStart={event => {
-          event.preventDefault();
-          return false;
-        }}
-        {...rest}
-        className={cn('image', className)}
-        src={`${IMAGE_URL_PATH}${MOVIE_FRAGMENT_IMAGE_SIZE.w780}${imageUrl}`}
-        alt="movie-image"
-      />
-    </div>
+      {quizImageContent}
+    </ProgressContainer>
   );
 };
