@@ -12,7 +12,7 @@ import { GameMode, GameModeMap, QuizData } from '../../types';
 import { Image as ImageComponent } from '../Image';
 import './style.scss';
 
-type MovieImageProps = {
+type QuizImageProps = {
   mode: GameMode;
   quizData: QuizData;
 };
@@ -20,7 +20,7 @@ type MovieImageProps = {
 const isMovieQuizData = (_data: QuizData, mode: GameMode): _data is QuizRound =>
   mode === GameModeMap.MOVIE;
 
-export const MovieImage = ({ mode, quizData }: MovieImageProps) => {
+export const QuizImage = ({ mode, quizData }: QuizImageProps) => {
   const { isLoading, resultData } = useQuizResult();
 
   const quizImageContent = useMemo(() => {

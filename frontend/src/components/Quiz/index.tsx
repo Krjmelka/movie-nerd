@@ -1,18 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import cn from 'classnames';
-import { MovieImage } from '../MovieImage';
+import { QuizImage } from '../QuizImage';
 import { Button } from '../Button';
 import { useQuizResult } from '../../context/resultContext/useQuizResult';
 import { GameMode, QuizData } from '../../types';
 import { ROUND_TIME_MAP } from '../../constants';
 import './style.scss';
 
-type MovieQuizProps = {
+type QuizProps = {
   quizData: QuizData;
   gameMode: GameMode;
 };
 
-export const MovieQuiz = ({ quizData, gameMode }: MovieQuizProps) => {
+export const Quiz = ({ quizData, gameMode }: QuizProps) => {
   const [activeButton, setActiveButton] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
   const { sendResultData, isLoading, resultData } = useQuizResult();
@@ -35,7 +35,7 @@ export const MovieQuiz = ({ quizData, gameMode }: MovieQuizProps) => {
         loading: isLoading,
       })}
     >
-      <MovieImage mode={gameMode} quizData={quizData} />
+      <QuizImage mode={gameMode} quizData={quizData} />
       {quizData.variants.map(variant => (
         <Button
           key={variant.id}

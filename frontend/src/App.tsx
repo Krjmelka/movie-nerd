@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MovieQuiz } from './components/MovieQuiz';
+import { Quiz } from './components/Quiz';
 import { useMovieQuiz } from './context/movieQuizContext/useMovieQuiz';
 import { Loading } from './components/Loading';
 import { useQuizResult } from './context/resultContext/useQuizResult';
@@ -23,7 +23,7 @@ function App() {
           {isLoading || !quizData ? (
             <Loading />
           ) : (
-            <MovieQuiz
+            <Quiz
               quizData={quizData as QuizData}
               gameMode={gameMode as GameMode}
             />
