@@ -14,7 +14,11 @@ $image-border: calc(var(--border-size) * 2);
   overflow: hidden;
 }
 
+.frame-container {
+  display: flex;
+}
+
 .actor-img {
-  width: 25%;
+  width: 100%;
   height: auto;
 }

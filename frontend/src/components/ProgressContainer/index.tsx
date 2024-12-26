@@ -1,22 +1,20 @@
 import { ReactNode } from 'react';
 import cn from 'classnames';
-import { GameMode } from '../../types';
-import { ASPECT_RATIO_MAP } from '../../constants';
 import './style.scss';
 
 type ProgressContainer = JSX.IntrinsicElements['div'] & {
   children: ReactNode;
   timeout: number;
-  mode: GameMode;
+  aspectRatio: string;
   isPaused?: boolean;
 };
 
 export const ProgressContainer = ({
   children,
   timeout,
-  mode,
   isPaused,
   className,
+  aspectRatio,
 }: ProgressContainer) => {
   return (
     <div
@@ -25,7 +23,7 @@ export const ProgressContainer = ({
       })}
       style={
         {
-          aspectRatio: ASPECT_RATIO_MAP[mode],
+          aspectRatio,
           '--round-time': `${timeout}s`,
         } as React.CSSProperties
       }

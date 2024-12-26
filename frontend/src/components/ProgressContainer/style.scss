@@ -17,6 +17,7 @@ $movie-image-border: calc(var(--border-size) * 2);
   width: 100%;
   border-radius: var(--border-radius);
   overflow: hidden;
+  align-self: center;
 
   &::before {
     content: '';
