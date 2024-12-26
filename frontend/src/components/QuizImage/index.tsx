@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { QuizRound } from '@movie-nerd/shared';
 import { useQuizResult } from '../../context/resultContext/useQuizResult';
 import {
   ROUND_TIME_MAP,
@@ -8,19 +7,18 @@ import {
   MOVIE_POSTER_IMAGE_SIZE,
 } from '../../constants';
 import { ProgressContainer } from '../ProgressContainer';
-import { GameMode, GameModeMap, QuizData } from '../../types';
+import { GameMode, QuizData } from '../../types';
 import { Image as ImageComponent } from '../Image';
 import './style.scss';
+import { isMovieQuizData } from '../../types/typeGuards';
+import { getQuizAspectRatio } from '../../utils/getQuizAspectRatio';
 
-type MovieImageProps = {
+type QuizImageProps = {
   mode: GameMode;
   quizData: QuizData;
 };
 
-const isMovieQuizData = (_data: QuizData, mode: GameMode): _data is QuizRound =>
-  mode === GameModeMap.MOVIE;
-
-export const MovieImage = ({ mode, quizData }: MovieImageProps) => {
+export const QuizImage = ({ mode, quizData }: QuizImageProps) => {
   const { isLoading, resultData } = useQuizResult();
 
   const quizImageContent = useMemo(() => {
@@ -49,7 +47,7 @@ export const MovieImage = ({ mode, quizData }: MovieImageProps) => {
   }, [mode, quizData]);
   return (
     <ProgressContainer
-      mode={mode}
+      aspectRatio={getQuizAspectRatio(quizData, mode)}
       timeout={ROUND_TIME_MAP[mode]}
       isPaused={isLoading || !!resultData}
     >

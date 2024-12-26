@@ -24,8 +24,17 @@ export const MOVIE_POSTER_IMAGE_SIZE = {
   original: 'original',
 } as const;
 
-export const ASPECT_RATIO_MAP: Record<GameMode, string> = {
-  ACTORS: '740 / 284',
-  MOVIE: '780 / 438',
-  DESCRIPTION: '780 / 438',
+export const ASPECT_RATIO_MAP: Record<GameMode, { w: number; h: number }> = {
+  ACTORS: {
+    w: 185,
+    h: 284,
+  }, // '185 / 284',
+  MOVIE: {
+    w: 780,
+    h: 438,
+  }, //'780 / 438',
+  DESCRIPTION: {
+    w: 780,
+    h: 438,
+  }, //'780 / 438',
 } as const;

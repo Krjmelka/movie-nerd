@@ -7,8 +7,11 @@ import {
   MovieResultAggregated,
 } from '@movie-nerd/shared';
 import { connectToDatabase } from '../utils/mongoose.util';
+import { StrictAPIGatewayProxyResult } from '../types';
 
-export const handler: APIGatewayProxyHandlerV2 = async event => {
+export const handler: APIGatewayProxyHandlerV2 = async (
+  event
+): Promise<StrictAPIGatewayProxyResult> => {
   const locale = event.queryStringParameters?.['lang'] ?? 'en';
   if (!event.body) {
     return {

@@ -89,6 +89,7 @@ export const MovieQuizProvider: FC<{ children: ReactNode }> = ({
             `${import.meta.env.VITE_API_URL}/actors-quiz?lang=${i18n.language}`
           );
           const imagesLoadPromises: Promise<unknown>[] = [];
+          data.actors = [...data.actors.filter(actor => !!actor.profile_path)];
 
           data.actors.forEach(actor => {
             imagesLoadPromises.push(
